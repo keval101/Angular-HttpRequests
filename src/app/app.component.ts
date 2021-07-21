@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 
 import { Post } from 'src/app/post.model'
+import { PostService } from './post.service';
 
 @Component({
   selector: 'app-root',
@@ -11,42 +12,44 @@ import { Post } from 'src/app/post.model'
 })
 export class AppComponent implements OnInit{
   loadedPosts:Post[] = [];
-  postName:string = '';
-  postContent:string = '';
+  isFetching = false;
+  error = null;
 
-  constructor(private http:HttpClient){}
+  constructor(private http:HttpClient, private postService:PostService){}
   ngOnInit(){
-    this.fetchPost();
+    this.isFetching = true;
+    this.postService.fetchPost().subscribe(posts => {
+        this.isFetching = false
+        this.loadedPosts = posts
+    }, error => {
+      this.error = error.message;
+    });
   }
 
   onCreatePost(postData: Post){
     //Send Http requests
-    this.http.post<{name:string}>('https://ng-complete-guide-560ea-default-rtdb.firebaseio.com/posts.json', postData)
-    .subscribe( response => console.log(response))
+    this.postService.createAndStorePost(postData.title, postData.content)
 
   }
 
   onFetchPosts(){
     //Send Http requests
-    this.fetchPost();
+    this.isFetching = true;
+    this.postService.fetchPost().subscribe(posts => {
+        this.isFetching = false
+        this.loadedPosts = posts
+    }, error => {
+      this.error = error.message;
+    });
   }
 
   onClearPosts(){
-
-  }
-
-  private fetchPost(){
-    this.http.get<{[key:string] : Post}>('https://ng-complete-guide-560ea-default-rtdb.firebaseio.com/posts.json')
-    .pipe(map( responceData => {
-      const postArray:Post[] = [];
-      for(const key in responceData){
-        if(responceData.hasOwnProperty(key)){
-          postArray.push({...responceData[key], id:key})
-        }
+    this.postService.deletePost().subscribe(
+      (responce) =>{
+        this.loadedPosts = [];
       }
-      return postArray;
-    }))
-    .subscribe(
-      posts => this.loadedPosts = posts)
+    )
   }
+
+
 }

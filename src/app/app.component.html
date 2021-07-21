@@ -32,11 +32,17 @@
 
     <div class="row justify-content-center mt-3">
       <div class="col-md-8 offser-md-2 ">
-       <p *ngIf = "loadedPosts.length < 1">No Post Avaiable </p>
-        <div class="card">
-          <div class="card-body">
-            <p>Post Name : {{loadedPosts.name}}</p>
-          </div>
+       <p *ngIf = "loadedPosts.length < 1 && !isFetching">No Post Avaiable </p>
+        <ul class="list-group" *ngIf = "loadedPosts.length >= 1 && !isFetching" >
+          <li class="list-group-item" *ngFor = "let post of loadedPosts">
+            <h3>{{post.title}}</h3>
+            <p>{{post.content}}</p>
+          </li>
+        </ul>
+        <p *ngIf = "isFetching && !error" >Loading...</p>
+        <div class="alert alert-danger">
+          <h3>Error Occur</h3>
+          <p> {{error}}</p>
         </div>
       </div>
     </div>
