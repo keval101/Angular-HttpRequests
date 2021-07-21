@@ -1,3 +1,4 @@
+<div [ngClass] = "{'sending' : sending || isFetching}" ></div>
   <div class="container ">
     <div class="row justify-content-center">
       <div class="col-md-8 offser-md-2">
@@ -40,9 +41,10 @@
           </li>
         </ul>
         <p *ngIf = "isFetching && !error" >Loading...</p>
-        <div class="alert alert-danger">
+        <div class="alert alert-danger" *ngIf = "error">
           <h3>Error Occur</h3>
           <p> {{error}}</p>
+          <button class="btn btn-danger" (click)="onErrorHandling()">Okay</button>
         </div>
       </div>
     </div>

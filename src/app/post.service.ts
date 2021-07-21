@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Post } from './post.model';
@@ -19,8 +19,14 @@ export class PostService {
 
 
   fetchPost(){
-
-    return this.http.get<{[key:string] : Post}>('https://ng-complete-guide-560ea-default-rtdb.firebaseio.com/posts.json')
+    let searchParam = new HttpParams();
+    searchParam = searchParam.append( 'print', 'pretty');
+    searchParam = searchParam.append( 'custom', 'key');
+    
+    return this.http.get<{[key:string] : Post}>('https://ng-complete-guide-560ea-default-rtdb.firebaseio.com/posts.json',{
+      headers: new HttpHeaders ( { 'Custom-Header' : 'Hello '}),
+      params : searchParam
+    })
     .pipe(map( responceData => {
       const postArray:Post[] = [];
       for(const key in responceData){

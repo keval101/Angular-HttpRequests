@@ -1,3 +1,19 @@
 .disable{
   cursor: not-allowed;
 }
+
+.sending{
+  height: 2px;
+  background-color: #007bff;
+  position: absolute;
+  animation: sendingBar 1s ease-in;
+}
+
+@keyframes sendingBar {
+  0%{
+    width: 55%;
+  }
+  100%{
+    width: 100%;
+  }
+}
