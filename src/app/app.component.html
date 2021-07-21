@@ -32,7 +32,12 @@
 
     <div class="row justify-content-center mt-3">
       <div class="col-md-8 offser-md-2 ">
-       <p>No Post Avaiable </p>
+       <p *ngIf = "loadedPosts.length < 1">No Post Avaiable </p>
+        <div class="card">
+          <div class="card-body">
+            <p>Post Name : {{loadedPosts.name}}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
